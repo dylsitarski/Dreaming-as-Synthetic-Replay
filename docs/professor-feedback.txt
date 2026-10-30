@@ -1,0 +1,13 @@
+From Professor Quinn:
+
+"The general topic sounds great (methods to improve generalization, esp for high dimensional data like images); connections with what happens in the brain during sleep is quite interesting
+
+There are standard approaches for augmenting training data, for computer vision, using known invariances to the information content for many tasks. Do look into standard approaches. If you think of some additional ones (esp inspired by what happens in the visual cortex during sleep, that would be great)
+
+In addition to augmenting training data, there are also training techniques like dropout might look into
+
+I’m assuming you are planning on focusing on classification tasks; you could also look into techniques for augmenting data for generative models. For instance, one interesting (though now older) approach is generative adversarial training.  You don’t need to do experiments with generative models, per se, but would be good for you to be aware.
+
+Perfectly fine to start off with MNIST to make sure things are working, though I would want you to use a more complex data set (such as fashion MNIST or CIFAR-10 for instance) in evaluating generalization approaches
+
+Keep me posted about progress (eg what things you’ve already tried; further references you’re using, etc.)"
