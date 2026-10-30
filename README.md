@@ -41,4 +41,13 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+## Running the wake-phase baseline
+
+```bash
+python experiments/run_baseline.py --config configs/baseline_fmnist.yaml --seeds 0 1 2
+python experiments/plot_history.py results/baseline_fmnist
+```
+
+The first run downloads the dataset to `data/`. On CPU, 3 seeds take about 8 minutes.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the team workflow.

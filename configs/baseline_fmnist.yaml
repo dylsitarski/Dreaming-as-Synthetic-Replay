@@ -1,0 +1,29 @@
+# Wake-phase baseline: a small CNN on a small Fashion-MNIST subset, no regularization.
+# The goal is a model that clearly overfits (train acc near 100%, a large gap to test acc).
+# Later dream-phase experiments start from the checkpoint this run saves.
+name: baseline_fmnist
+
+data:
+  name: fashion_mnist
+  train_size: 2000      # balanced: 200 per class
+  val_size: 5000        # drawn from training images that are not in the train subset
+  root: data
+
+model:
+  arch: small_cnn
+  width: 32
+  hidden: 256
+  dropout: 0.0
+
+optim:
+  name: adam
+  lr: 0.001
+  weight_decay: 0.0
+
+train:
+  epochs: 60
+  batch_size: 64
+  eval_batch_size: 1000
+  log_every: 1
+
+device: auto
