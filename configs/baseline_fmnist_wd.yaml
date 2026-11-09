@@ -1,0 +1,35 @@
+# Regularization baseline: the wake-phase baseline plus decoupled weight decay (AdamW).
+# AdamW with weight_decay 0 is the same as the Adam baseline, so the decay is the only change.
+# AdamW shrinks weights by lr * weight_decay per step. With lr 0.001, even PyTorch's default of
+# 0.01 shrinks them by only about 2% over all 1,920 steps, so these values are larger than usual.
+# Report the value with the best mean val_acc (see experiments/summarize.py), not the best test_acc.
+# Write values as decimals: PyYAML reads 1e-2 as a string.
+name: baseline_fmnist_wd
+
+data:
+  name: fashion_mnist
+  train_size: 2000      # balanced: 200 per class
+  val_size: 5000        # drawn from training images that are not in the train subset
+  root: data
+
+model:
+  arch: small_cnn
+  width: 32
+  hidden: 256
+  dropout: 0.0
+
+optim:
+  name: adamw
+  lr: 0.001
+  weight_decay: 0.0     # set by the sweep
+
+train:
+  epochs: 60
+  batch_size: 64
+  eval_batch_size: 1000
+  log_every: 1
+
+device: auto
+
+sweep:
+  optim.weight_decay: [0.03, 0.1, 0.3, 1.0, 10.0]

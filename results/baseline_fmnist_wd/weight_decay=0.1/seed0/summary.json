@@ -1,0 +1,12 @@
+{
+  "seed": 0,
+  "final": {
+    "epoch": 60,
+    "train_acc": 1.0,
+    "val_acc": 0.8602,
+    "test_acc": 0.8568,
+    "gap": 0.1432
+  },
+  "best_val_epoch": 27,
+  "test_acc_at_best_val": 0.8582
+}

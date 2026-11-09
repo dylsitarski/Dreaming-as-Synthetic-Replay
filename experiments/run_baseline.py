@@ -4,7 +4,8 @@ Usage:
     python experiments/run_baseline.py --config configs/baseline_fmnist.yaml --seeds 0 1 2
 
 Outputs go to results/<name>/seed<k>/: history.csv, summary.json, config.yaml, and wake.pt
-(checkpoints are git-ignored).
+(checkpoints are git-ignored). If the config has a `sweep` block, each swept value is trained in
+turn and saved under results/<name>/<key>=<value>/seed<k>/.
 """
 
 import argparse
@@ -18,7 +19,7 @@ import yaml
 from dreamreplay.data import load_splits, make_loader
 from dreamreplay.models import build_model
 from dreamreplay.train import build_optimizer, fit
-from dreamreplay.utils import get_device, load_config, set_seed
+from dreamreplay.utils import expand_sweep, get_device, load_config, set_seed
 
 
 def run(cfg: dict, seed: int, out_root: Path) -> dict:
@@ -43,7 +44,7 @@ def run(cfg: dict, seed: int, out_root: Path) -> dict:
         phase="wake", log_every=tcfg.get("log_every", 1),
     )
 
-    out = out_root / cfg["name"] / f"seed{seed}"
+    out = out_root / cfg["name"] / cfg.get("run", "") / f"seed{seed}"
     out.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(history).to_csv(out / "history.csv", index=False)
     (out / "config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
@@ -70,12 +71,14 @@ def main() -> None:
     args = p.parse_args()
 
     cfg = load_config(args.config)
-    summaries = [run(cfg, s, Path(args.out)) for s in args.seeds]
+    for run_cfg in expand_sweep(cfg):
+        summaries = [run(run_cfg, s, Path(args.out)) for s in args.seeds]
 
-    df = pd.DataFrame([{"seed": s["seed"], **s["final"]} for s in summaries])
-    print("\nFinal metrics across seeds (mean +/- std):")
-    for col in ("train_acc", "val_acc", "test_acc", "gap"):
-        print(f"  {col:10s} {df[col].mean():.4f} +/- {df[col].std(ddof=0):.4f}")
+        df = pd.DataFrame([{"seed": s["seed"], **s["final"]} for s in summaries])
+        label = f" for {run_cfg['run']}" if "run" in run_cfg else ""
+        print(f"\nFinal metrics across seeds{label} (mean +/- std):")
+        for col in ("train_acc", "val_acc", "test_acc", "gap"):
+            print(f"  {col:10s} {df[col].mean():.4f} +/- {df[col].std(ddof=0):.4f}")
 
 
 if __name__ == "__main__":

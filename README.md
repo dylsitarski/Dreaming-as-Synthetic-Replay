@@ -50,4 +50,20 @@ python experiments/plot_history.py results/baseline_fmnist
 
 The first run downloads the dataset to `data/`. On CPU, 3 seeds take about 8 minutes.
 
+## Running the regularization baselines
+
+Dropout (three rates) and weight decay with AdamW (five strengths), 3 seeds each. Each run takes
+about 2 minutes on a laptop CPU.
+
+```bash
+python experiments/run_baseline.py --config configs/baseline_fmnist_dropout.yaml --seeds 0 1 2
+python experiments/run_baseline.py --config configs/baseline_fmnist_wd.yaml --seeds 0 1 2
+python experiments/summarize.py results/baseline_fmnist results/baseline_fmnist_dropout results/baseline_fmnist_wd
+```
+
+A config with a `sweep` block trains one run per value and saves each under
+`results/<name>/<key>=<value>/`. `summarize.py` prints a Markdown table and marks the value with the
+best mean validation accuracy. Report that value's test accuracy, so test data never picks the
+setting.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the team workflow.
