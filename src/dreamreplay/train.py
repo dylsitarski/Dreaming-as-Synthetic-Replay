@@ -15,6 +15,10 @@ def build_optimizer(model: nn.Module, cfg: dict) -> torch.optim.Optimizer:
     name = cfg.pop("name", "adam")
     if name == "adam":
         return torch.optim.Adam(model.parameters(), **cfg)
+    if name == "adamw":
+        # Decoupled weight decay (Loshchilov & Hutter, 2019). Adam's own `weight_decay` is an L2
+        # penalty that Adam rescales per parameter, so it does not shrink weights evenly.
+        return torch.optim.AdamW(model.parameters(), **cfg)
     if name == "sgd":
         return torch.optim.SGD(model.parameters(), **cfg)
     raise ValueError(f"Unknown optimizer {name!r}")

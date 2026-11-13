@@ -15,6 +15,7 @@ When you add a paper, include a one-line note on why it matters to us.
 
 ## Regularization
 - Srivastava et al. (2014). *Dropout.*
+- Loshchilov & Hutter (2019). *Decoupled weight decay regularization.* Why the weight-decay baseline uses AdamW: Adam's built-in L2 penalty is rescaled per parameter, so it does not decay weights evenly.
 
 ## Generative models (for awareness only)
 - Goodfellow et al. (2014). *Generative adversarial nets.*
